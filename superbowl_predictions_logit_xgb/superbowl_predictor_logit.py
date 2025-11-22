@@ -110,7 +110,43 @@ teamB_stats = pred_2025[(pred_2025["Year"]==season_year) &
 pA = predict_sb(teamA_stats, teamB_stats)
 
 print(f"P({teamA} wins Super Bowl LX) =", pA)
-print(f"P({teamB} wins Super Bowl LX) =", 1-pA)
+print(f"P({teamB} wins Super Bowl LX) =", 1-pA, "\n\n")
 
 
+# Extract scaler and logit model
+scaler = logit_pipe.named_steps["scaler"]
+logit  = logit_pipe.named_steps["logit"]
+
+# Get coefficients mapped to feature names
+coef_series = pd.Series(logit.coef_[0], index=feature_cols)
+
+# Compute raw (Bills - Rams) diff vector
+raw_diff = (teamA_stats[feature_cols].astype(float) -
+            teamB_stats[feature_cols].astype(float))
+
+# Scale using same scaler as training
+scaled_diff = pd.Series(
+    scaler.transform(raw_diff.to_frame().T)[0],
+    index=feature_cols
+)
+
+# Contribution to log-odds = coef * scaled_diff
+log_odds_contrib = coef_series * scaled_diff
+
+# Build output table
+contrib_table = pd.DataFrame({
+    "Feature": feature_cols,
+    "Weight (coef)": coef_series.values,
+    "Diff (Bills - Rams)": raw_diff.values,
+    "Diff (scaled)": scaled_diff.values,
+    "Log-odds Contribution": log_odds_contrib.values
+})
+
+# SORT BY COEFFICIENT (weight) descending
+contrib_table = contrib_table.sort_values(
+    "Weight (coef)",
+    ascending=False
+)
+
+print(contrib_table.to_string(index=False))
 
