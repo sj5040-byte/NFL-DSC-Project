@@ -71,7 +71,6 @@ pred = (proba >= 0.5).astype(int)
 print("accuracy:", accuracy_score(y, pred))
 print("logloss :", log_loss(y, proba))
 print("brier   :", brier_score_loss(y, proba))
-print("confusion matrix:\n", confusion_matrix(y, pred))
 
 #Fit final model
 logit_pipe.fit(X, y)

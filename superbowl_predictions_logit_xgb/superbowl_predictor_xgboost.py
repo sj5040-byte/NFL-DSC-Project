@@ -72,7 +72,6 @@ pred_xgb = (proba_xgb >= 0.5).astype(int)
 print("Accuracy :", accuracy_score(y, pred_xgb))
 print("Log Loss :", log_loss(y, proba_xgb))
 print("Brier    :", brier_score_loss(y, proba_xgb))
-print("Conf Mat :\n", confusion_matrix(y, pred_xgb))
 
 
 # Fit Final Model
