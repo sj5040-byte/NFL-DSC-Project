@@ -10,7 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss, accuracy_score, brier_score_loss, confusion_matrix #for model evaluation
 
 
-nfl_data = pd.read_csv('merged_nfl_data.csv')
+nfl_data = pd.read_csv('Old Data/merged_nfl_data.csv')
 sb_data = pd.read_csv('superbowl_teams.csv')
 
 # test the data loading
